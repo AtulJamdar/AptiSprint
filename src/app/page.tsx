@@ -1,4 +1,6 @@
+import { questions } from "@/data/questions";
 export default function Home() {
+  console.log(questions);
   return (
     <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
       <h1 className="text-5xl font-bold mb-4">AptiSprint</h1>
