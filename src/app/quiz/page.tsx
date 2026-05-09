@@ -1,15 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { questions } from "@/data/questions";
+import { useSearchParams } from "next/navigation";
 
 export default function QuizPage() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [score, setScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [wrongTopics, setWrongTopics] = useState<string[]>([]);
+  const searchParams = useSearchParams();
+  const selectedTopic = searchParams.get("topic");
+  
+  const filteredQuestions = selectedTopic
+  ? questions.filter(
+      (q) => q.topic === selectedTopic
+    )
+  : questions;
 
-  const question = questions[currentQuestion];
+const question = filteredQuestions[currentQuestion];
+  
+
+
+  useEffect(() => {
+    if (showExplanation || quizFinished) return;
+
+    if (timeLeft === 0) {
+        setShowExplanation(true);
+        return;
+    }
+
+    const timer = setTimeout(() => {
+        setTimeLeft((prev) => prev - 1);
+    },1000);
+
+    return () => clearTimeout(timer);
+    }, [timeLeft, showExplanation, quizFinished]);
+
+    const weakTopic =
+  wrongTopics.length > 0
+    ? wrongTopics.sort(
+        (a, b) =>
+          wrongTopics.filter((v) => v === a).length -
+          wrongTopics.filter((v) => v === b).length
+      )[wrongTopics.length - 1]
+    : null;
 
   if (quizFinished) {
   return (
@@ -21,18 +59,25 @@ export default function QuizPage() {
         </h1>
 
         <p className="text-2xl text-green-400 mb-2">
-          {score} / {questions.length}
+          {score} / {filteredQuestions.length}
         </p>
 
         <p className="text-zinc-400 mb-6">
-          Accuracy: {Math.round((score / questions.length) * 100)}%
+          Accuracy: {Math.round((score / filteredQuestions.length) * 100)}%
         </p>
+
+        {weakTopic && (
+  <p className="text-red-400 mb-6">
+    Weak Area: {weakTopic}
+  </p>
+)}
 
         <button
           onClick={() => {
             setCurrentQuestion(0);
             setScore(0);
             setQuizFinished(false);
+            setWrongTopics([]);
           }}
           className="w-full bg-white text-black py-3 rounded-xl font-semibold"
         >
@@ -49,10 +94,10 @@ export default function QuizPage() {
 
         <div className="flex justify-between mb-6">
           <p className="text-zinc-400">
-            Question {currentQuestion + 1} / {questions.length}
+            Question {currentQuestion + 1} / {filteredQuestions.length}
           </p>
 
-          <p className="text-yellow-400">30s</p>
+          <p className="text-yellow-400">{timeLeft}s</p>
           <p className="text-green-400">Score: {score}</p>
         </div>
 
@@ -64,7 +109,11 @@ export default function QuizPage() {
           {question.options.map((option) => (
             <button
               key={option}
-              onClick={() => setSelectedAnswer(option)}
+              onClick={() => {
+                setSelectedAnswer(option);
+                setShowExplanation(true);
+              }}
+              disabled={showExplanation}
               className={`border p-4 rounded-xl text-left transition
     ${
       selectedAnswer === option
@@ -78,17 +127,55 @@ export default function QuizPage() {
           ))}
         </div>
 
+        {showExplanation && (
+  <div className="mt-6 bg-zinc-800 p-4 rounded-xl">
+
+    <p className="mb-2">
+      {selectedAnswer === question.answer ? (
+        <span className="text-green-400 font-semibold">
+          Correct Answer ✅
+        </span>
+      ) : (
+        <span className="text-red-400 font-semibold">
+          Wrong Answer ❌
+        </span>
+      )}
+    </p>
+
+    <p className="text-zinc-300 mb-3">
+      {question.explanation}
+    </p>
+
+    <div className="bg-yellow-500/10 border border-yellow-500/30 p-3 rounded-lg">
+      <p className="text-yellow-300 font-semibold mb-1">
+        Fastest Trick ⚡
+      </p>
+
+      <p className="text-zinc-300">
+        {question.shortcut}
+      </p>
+    </div>
+  </div>
+)}
+
         <button
           onClick={() => {
             if (selectedAnswer === question.answer) {
-              setScore(score + 1);
-            }
+  setScore(score + 1);
+} else {
+  setWrongTopics((prev) => [
+    ...prev,
+    question.topic,
+  ]);
+}
             setSelectedAnswer("");
-            if (currentQuestion + 1 < questions.length){
+            if (currentQuestion + 1 < filteredQuestions.length){
                 setCurrentQuestion(currentQuestion + 1);
             }else{
                 setQuizFinished(true);
             }
+            setTimeLeft(30);
+            setShowExplanation(false);
           }}
           className="w-full mt-8 bg-white text-black py-3 rounded-xl font-semibold"
         >

@@ -1,6 +1,13 @@
 import { questions } from "@/data/questions";
+import Link from "next/link";
 export default function Home() {
-  console.log(questions);
+  const topics = [
+    "Percentages",
+    "Profit & Loss",
+    "Ratio",
+    "Time & Work",
+    "Probability",
+  ];
   return (
     <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6">
       <h1 className="text-5xl font-bold mb-4">AptiSprint</h1>
@@ -9,19 +16,25 @@ export default function Home() {
         Practice aptitude with 5-question timed sprints.
       </p>
 
-      <div className="flex flex-col gap-4 w-full max-w-xs">
-        <button className="bg-white text-black py-3 rounded-xl font-semibold">
-          Start Sprint
-        </button>
+      <div className="grid grid-cols-1 gap-4 w-full max-w-sm">
 
-        <button className="border border-zinc-700 py-3 rounded-xl">
-          Random Quiz
-        </button>
+  <Link
+    href="/quiz"
+    className="bg-white text-black py-3 rounded-xl font-semibold text-center"
+  >
+    Random Sprint
+  </Link>
 
-        <button className="border border-zinc-700 py-3 rounded-xl">
-          Weak Areas
-        </button>
-      </div>
+  {topics.map((topic) => (
+    <Link
+      key={topic}
+      href={`/quiz?topic=${encodeURIComponent(topic)}`}
+      className="border border-zinc-700 py-3 rounded-xl text-center hover:bg-zinc-900 transition"
+    >
+      {topic}
+    </Link>
+  ))}
+</div>
     </main>
   );
 }
