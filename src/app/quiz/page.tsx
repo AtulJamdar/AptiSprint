@@ -83,6 +83,12 @@ const question = filteredQuestions[currentQuestion];
         >
           Retry Sprint
         </button>
+        <a
+  href="/"
+  className="block mt-4 text-zinc-400 hover:text-white transition"
+>
+  Back to Home
+</a>
       </div>
     </main>
   );

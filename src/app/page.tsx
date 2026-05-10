@@ -13,8 +13,11 @@ export default function Home() {
       <h1 className="text-5xl font-bold mb-4">AptiSprint</h1>
 
       <p className="text-zinc-400 text-center max-w-md mb-8">
-        Practice aptitude with 5-question timed sprints.
-      </p>
+  Improve placement aptitude with fast 5-question timed practice rounds.
+</p>
+<p className="text-yellow-400 text-sm mb-8">
+  Learn shortcuts. Beat the timer. Track weak areas.
+</p>
 
       <div className="grid grid-cols-1 gap-4 w-full max-w-sm">
 
