@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
@@ -95,7 +96,7 @@ const question = filteredQuestions[currentQuestion];
 }
 
   return (
-    <Suspense>
+   
     <main className="min-h-screen bg-black text-white p-6 flex items-center justify-center">
       <div className="w-full max-w-xl bg-zinc-900 rounded-2xl p-6">
 
@@ -190,6 +191,6 @@ const question = filteredQuestions[currentQuestion];
         </button>
       </div>
     </main>
-    </Suspense>
+    
   );
 }
