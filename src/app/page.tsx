@@ -1,4 +1,4 @@
-import { questions } from "@/data/questions";
+import { questions } from "@/types/question";
 import Link from "next/link";
 export default function Home() {
   const topics = [
