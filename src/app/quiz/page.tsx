@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { questions } from "@/data/questions";
 import { useSearchParams } from "next/navigation";
 
