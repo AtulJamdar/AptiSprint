@@ -1,7 +1,21 @@
-export const questions = [
+export type Difficulty = "easy" | "medium" | "hard";
+
+export interface Question {
+  id: number;
+  topic: string;
+  difficulty: Difficulty;
+  question: string;
+  options: string[];
+  answer: string;
+  explanation: string;
+  shortcut: string;
+}
+
+export const questions: Question[] = [
   {
     id: 1,
     topic: "Percentages",
+    difficulty: "easy",
     question: "What is 20% of 250?",
     options: ["25", "50", "75", "100"],
     answer: "50",
@@ -14,6 +28,7 @@ export const questions = [
   {
     id: 2,
     topic: "Profit & Loss",
+    difficulty: "medium",
     question: "A product bought for ₹500 is sold for ₹650. Find profit.",
     options: ["100", "150", "200", "250"],
     answer: "150",
@@ -26,6 +41,7 @@ export const questions = [
   {
     id: 3,
     topic: "Ratio",
+    difficulty: "easy",
     question: "Find ratio of 20 and 50.",
     options: ["2:5", "5:2", "1:2", "3:5"],
     answer: "2:5",
@@ -38,6 +54,7 @@ export const questions = [
   {
     id: 4,
     topic: "Time & Work",
+    difficulty: "hard",
     question: "If A completes work in 10 days, how much work in 1 day?",
     options: ["1/5", "1/10", "10", "5"],
     answer: "1/10",
@@ -50,6 +67,7 @@ export const questions = [
   {
     id: 5,
     topic: "Probability",
+    difficulty: "medium",
     question: "Probability of getting head in one coin toss?",
     options: ["0", "1", "1/2", "2"],
     answer: "1/2",

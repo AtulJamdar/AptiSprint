@@ -2,10 +2,12 @@
 
 import { Suspense, useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { questions } from "@/types/question";
+import { questions, Question } from "@/types/question";
 import { useTimer } from "@/features/quiz/hooks/useTimer";
 import { ResultScreen } from "@/features/quiz/components/ResultScreen";
 import { ExplanationBox } from "@/features/quiz/components/ExplanationBox";
+import { generateQuestion } from "@/features/quiz/services/groqService";
+import LoadingState from "@/features/quiz/components/LoadingState";
 
 function QuizContent() {
   const searchParams = useSearchParams();
@@ -23,8 +25,12 @@ function QuizContent() {
   const [quizFinished, setQuizFinished] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
   const [wrongTopics, setWrongTopics] = useState<string[]>([]);
+  const [generatedQuestion, setGeneratedQuestion] = useState<Question | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  const question = filteredQuestions[currentQuestion];
+  const question =
+    generatedQuestion ||
+    filteredQuestions[currentQuestion];
 
   // Logic: Timer Hook
   const { timeLeft, resetTimer } = useTimer(
@@ -105,6 +111,37 @@ function QuizContent() {
             shortcut={question.shortcut}
           />
         )}
+
+        <button
+          onClick={async () => {
+            try {
+              setIsGenerating(true);
+
+              const newQuestion =
+                await generateQuestion({
+                  topic: question.topic,
+                  difficulty: question.difficulty,
+                });
+
+              setGeneratedQuestion(newQuestion);
+
+              setSelectedAnswer("");
+              setShowExplanation(false);
+              resetTimer();
+
+            } catch (error) {
+              console.error(error);
+            } finally {
+              setIsGenerating(false);
+            }
+          }}
+          disabled={isGenerating}
+          className="w-full mt-4 border border-yellow-500 text-yellow-400 py-3 rounded-xl hover:bg-yellow-500/10 transition disabled:opacity-50"
+        >
+          Generate Similar Question
+        </button>
+
+        {isGenerating && <LoadingState />}
 
         <button
           onClick={handleNext}
