@@ -93,21 +93,51 @@ function QuizContent() {
         <h1 className="text-2xl font-bold mb-6">{question.question}</h1>
 
         <div className="flex flex-col gap-4">
-          {question.options.map((option) => (
-            <button
-              key={option}
-              disabled={showExplanation}
-              onClick={() => {
-                setSelectedAnswer(option);
-                setShowExplanation(true);
-              }}
-              className={`border p-4 rounded-xl text-left transition ${
-                selectedAnswer === option ? "border-green-500 bg-green-500/20" : "border-zinc-700 hover:bg-zinc-800"
-              }`}
-            >
-              {option}
-            </button>
-          ))}
+          {question.options.map((option) => {
+            const isCorrect = normalizeAnswer(option) === normalizeAnswer(question.answer);
+            const isSelected = normalizeAnswer(option) === normalizeAnswer(selectedAnswer);
+            
+            // Determine button styling based on state
+            let buttonClass = "border p-4 rounded-xl text-left transition ";
+            
+            if (showExplanation) {
+              // After answer submitted: show correct answer and highlight wrong selection
+              if (isCorrect && isSelected) {
+                // User selected the correct answer
+                buttonClass += "border-green-500 bg-green-500/20 text-green-100";
+              } else if (isCorrect && !isSelected) {
+                // Show the correct answer even if not selected
+                buttonClass += "border-green-500 bg-green-500/20 text-green-100";
+              } else if (!isCorrect && isSelected) {
+                // User selected this wrong answer - highlight in red
+                buttonClass += "border-red-500 bg-red-500/20 text-red-100";
+              } else {
+                // Other unselected, incorrect options - normal style
+                buttonClass += "border-zinc-700 text-zinc-300";
+              }
+            } else {
+              // Before answer submitted: only show selected answer highlight
+              if (isSelected) {
+                buttonClass += "border-green-500 bg-green-500/20 text-green-100";
+              } else {
+                buttonClass += "border-zinc-700 hover:bg-zinc-800 text-zinc-300";
+              }
+            }
+            
+            return (
+              <button
+                key={option}
+                disabled={showExplanation}
+                onClick={() => {
+                  setSelectedAnswer(option);
+                  setShowExplanation(true);
+                }}
+                className={buttonClass}
+              >
+                {option}
+              </button>
+            );
+          })}
         </div>
 
         {showExplanation && (

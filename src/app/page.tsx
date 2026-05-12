@@ -22,6 +22,15 @@ export default function Home() {
       <div className="grid grid-cols-1 gap-4 w-full max-w-sm">
 
   <Link
+    href="/exam"
+    className="bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-bold text-center transition"
+  >
+    🎯 Start Test (30 min)
+  </Link>
+
+  <div className="h-px bg-zinc-700 my-2"></div>
+
+  <Link
     href="/quiz"
     className="bg-white text-black py-3 rounded-xl font-semibold text-center"
   >

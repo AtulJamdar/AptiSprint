@@ -35,6 +35,7 @@ export async function generateQuestion({
     id: Date.now(),
     topic,
     difficulty,
+    type: "practice",
     question: data.question,
     options: data.options,
     answer: data.answer,
