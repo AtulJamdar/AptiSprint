@@ -47,12 +47,7 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Info section */}
-        <div className="mt-6 p-4 border border-zinc-700 rounded-lg">
-          <p className="text-xs text-zinc-400 text-center">
-            Phase 1: 13 Core Topics | Total Questions: 195+ | All Curated & Verified
-          </p>
-        </div>
+        
       </div>
     </main>
   );
