@@ -1,7 +1,8 @@
 import { Question, Difficulty } from "@/types/question";
+import { CategoryName } from "@/data/categories";
 
 interface GenerateQuestionParams {
-  topic: string;
+  topic: CategoryName;
   difficulty: Difficulty;
 }
 

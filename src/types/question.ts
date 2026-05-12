@@ -1,9 +1,18 @@
+import { CategoryName } from "@/data/categories";
+
 export type Difficulty = "easy" | "medium" | "hard";
 export type QuestionType = "practice" | "exam";
 
+/**
+ * Question interface supporting:
+ * - 13 categories (PHASE 1 coverage)
+ * - 3 difficulty levels per category
+ * - Practice and Exam modes
+ * - Optional learning fields (explanations, steps, formulas)
+ */
 export interface Question {
   id: number;
-  topic: string;
+  topic: CategoryName;
   difficulty: Difficulty;
   type: QuestionType;
   question: string;
@@ -286,7 +295,7 @@ export const questions: Question[] = [
   // ===== RATIO & PROPORTION (10 questions) =====
   {
     id: 21,
-    topic: "Ratio",
+    topic: "Ratio & Proportion",
     difficulty: "easy",
     type: "practice",
     question: "Find ratio of 20 and 50.",
@@ -299,7 +308,7 @@ export const questions: Question[] = [
 
   {
     id: 22,
-    topic: "Ratio",
+    topic: "Ratio & Proportion",
     difficulty: "easy",
     type: "practice",
     question: "If A:B = 3:5 and A = 12, what is B?",
@@ -312,7 +321,7 @@ export const questions: Question[] = [
 
   {
     id: 23,
-    topic: "Ratio",
+    topic: "Ratio & Proportion",
     difficulty: "medium",
     type: "practice",
     question: "In a school, ratio of boys to girls is 4:5. If there are 240 boys, how many girls?",
@@ -325,7 +334,7 @@ export const questions: Question[] = [
 
   {
     id: 24,
-    topic: "Ratio",
+    topic: "Ratio & Proportion",
     difficulty: "medium",
     type: "practice",
     question: "If A:B:C = 2:3:4 and total is 360, find A.",
@@ -338,7 +347,7 @@ export const questions: Question[] = [
 
   {
     id: 25,
-    topic: "Ratio",
+    topic: "Ratio & Proportion",
     difficulty: "medium",
     type: "practice",
     question: "₹500 is divided in ratio 3:7. What is the smaller share?",
@@ -351,7 +360,7 @@ export const questions: Question[] = [
 
   {
     id: 26,
-    topic: "Ratio",
+    topic: "Ratio & Proportion",
     difficulty: "hard",
     type: "practice",
     question: "Two numbers are in ratio 2:3. If each is increased by 5, the new ratio becomes 5:7. Find numbers.",
@@ -364,7 +373,7 @@ export const questions: Question[] = [
 
   {
     id: 27,
-    topic: "Ratio",
+    topic: "Ratio & Proportion",
     difficulty: "hard",
     type: "practice",
     question: "A profit of ₹1200 is divided between two partners in ratio 3:5. What is the larger share?",
@@ -377,7 +386,7 @@ export const questions: Question[] = [
 
   {
     id: 28,
-    topic: "Ratio",
+    topic: "Ratio & Proportion",
     difficulty: "hard",
     type: "practice",
     question: "If 2A = 3B = 4C, find A:B:C.",
@@ -390,7 +399,7 @@ export const questions: Question[] = [
 
   {
     id: 29,
-    topic: "Ratio",
+    topic: "Ratio & Proportion",
     difficulty: "hard",
     type: "practice",
     question: "A bag has red, blue, green balls in ratio 2:3:5. If there are 80 balls total, green balls count is?",
@@ -403,7 +412,7 @@ export const questions: Question[] = [
 
   {
     id: 30,
-    topic: "Ratio",
+    topic: "Ratio & Proportion",
     difficulty: "hard",
     type: "practice",
     question: "In a mixture of 40L, milk to water is 3:1. How much more milk is needed to make it 4:1?",
@@ -829,7 +838,7 @@ export const questions: Question[] = [
 
   {
     id: 63,
-    topic: "Ratio",
+    topic: "Ratio & Proportion",
     difficulty: "easy",
     type: "exam",
     question: "Simplify 48:64",
@@ -841,7 +850,7 @@ export const questions: Question[] = [
 
   {
     id: 64,
-    topic: "Ratio",
+    topic: "Ratio & Proportion",
     difficulty: "medium",
     type: "exam",
     question: "A:B = 5:7, A = 35. B = ?",
@@ -853,7 +862,7 @@ export const questions: Question[] = [
 
   {
     id: 65,
-    topic: "Ratio",
+    topic: "Ratio & Proportion",
     difficulty: "medium",
     type: "exam",
     question: "Boys:Girls = 3:5. Total 320. Boys = ?",
@@ -865,7 +874,7 @@ export const questions: Question[] = [
 
   {
     id: 66,
-    topic: "Ratio",
+    topic: "Ratio & Proportion",
     difficulty: "hard",
     type: "exam",
     question: "X:Y:Z = 4:5:6. Sum = 450. Z = ?",
@@ -877,7 +886,7 @@ export const questions: Question[] = [
 
   {
     id: 67,
-    topic: "Ratio",
+    topic: "Ratio & Proportion",
     difficulty: "hard",
     type: "exam",
     question: "Ratio 3:4. Each increased by 10, ratio becomes 4:5. Numbers?",
@@ -889,7 +898,7 @@ export const questions: Question[] = [
 
   {
     id: 68,
-    topic: "Ratio",
+    topic: "Ratio & Proportion",
     difficulty: "hard",
     type: "exam",
     question: "If 3P = 4Q = 5R, P:Q:R = ?",
