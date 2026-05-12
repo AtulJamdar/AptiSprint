@@ -1,0 +1,15 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#000000" rx="120"/>
+  
+  <!-- Yellow accent circle -->
+  <circle cx="256" cy="256" r="190" fill="#fbbf24" opacity="0.1"/>
+  
+  <!-- "A" letter for Apti -->
+  <text x="256" y="340" font-family="Arial, sans-serif" font-size="220" font-weight="bold" fill="#fbbf24" text-anchor="middle">A</text>
+  
+  <!-- Sprint indicator dots -->
+  <circle cx="150" cy="120" r="18" fill="#fbbf24"/>
+  <circle cx="256" cy="100" r="18" fill="#fbbf24"/>
+  <circle cx="362" cy="120" r="18" fill="#fbbf24"/>
+</svg>

@@ -6,8 +6,10 @@ import { questions, Question } from "@/types/question";
 import { useTimer } from "@/features/quiz/hooks/useTimer";
 import { ResultScreen } from "@/features/quiz/components/ResultScreen";
 import { ExplanationBox } from "@/features/quiz/components/ExplanationBox";
+import { DifficultyBadge } from "@/features/quiz/components/DifficultyBadge";
 import { generateQuestion } from "@/features/quiz/services/groqService";
 import LoadingState from "@/features/quiz/components/LoadingState";
+import { normalizeAnswer } from "@/features/quiz/utils/normalizeAnswer";
 
 function QuizContent() {
   const searchParams = useSearchParams();
@@ -27,6 +29,7 @@ function QuizContent() {
   const [wrongTopics, setWrongTopics] = useState<string[]>([]);
   const [generatedQuestion, setGeneratedQuestion] = useState<Question | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState<string | null>(null);
 
   const question =
     generatedQuestion ||
@@ -48,7 +51,7 @@ function QuizContent() {
   }, [wrongTopics]);
 
   const handleNext = () => {
-    if (selectedAnswer === question.answer) {
+    if (normalizeAnswer(selectedAnswer) === normalizeAnswer(question.answer)) {
       setScore(score + 1);
     } else {
       setWrongTopics((prev) => [...prev, question.topic]);
@@ -78,9 +81,12 @@ function QuizContent() {
   return (
     <main className="min-h-screen bg-black text-white p-6 flex items-center justify-center">
       <div className="w-full max-w-xl bg-zinc-900 rounded-2xl p-6">
-        <div className="flex justify-between mb-6">
+        <div className="flex justify-between items-center mb-6">
           <p className="text-zinc-400">Question {currentQuestion + 1} / {filteredQuestions.length}</p>
-          <p className="text-yellow-400">{timeLeft}s</p>
+          <div className="flex items-center gap-4">
+            <DifficultyBadge difficulty={question.difficulty} size="sm" />
+            <p className="text-yellow-400">{timeLeft}s</p>
+          </div>
         </div>
 
         <p className="text-green-400 mb-2">Score: {score}</p>
@@ -106,9 +112,11 @@ function QuizContent() {
 
         {showExplanation && (
           <ExplanationBox 
-            isCorrect={selectedAnswer === question.answer}
+            isCorrect={normalizeAnswer(selectedAnswer) === normalizeAnswer(question.answer)}
             explanation={question.explanation}
             shortcut={question.shortcut}
+            steps={question.steps}
+            formula={question.formula}
           />
         )}
 
@@ -116,6 +124,7 @@ function QuizContent() {
           onClick={async () => {
             try {
               setIsGenerating(true);
+              setGenerationError(null);
 
               const newQuestion =
                 await generateQuestion({
@@ -130,6 +139,10 @@ function QuizContent() {
               resetTimer();
 
             } catch (error) {
+              const errorMessage = error instanceof Error 
+                ? error.message 
+                : "Failed to generate question. Please try again.";
+              setGenerationError(errorMessage);
               console.error(error);
             } finally {
               setIsGenerating(false);
@@ -142,6 +155,43 @@ function QuizContent() {
         </button>
 
         {isGenerating && <LoadingState />}
+
+        {generationError && (
+          <div className="mt-4 p-4 bg-red-500/20 border border-red-500 rounded-xl">
+            <p className="text-red-400 text-sm mb-2">{generationError}</p>
+            <button
+              onClick={async () => {
+                try {
+                  setGenerationError(null);
+                  setIsGenerating(true);
+
+                  const newQuestion =
+                    await generateQuestion({
+                      topic: question.topic,
+                      difficulty: question.difficulty,
+                    });
+
+                  setGeneratedQuestion(newQuestion);
+                  setSelectedAnswer("");
+                  setShowExplanation(false);
+                  resetTimer();
+
+                } catch (error) {
+                  const errorMessage = error instanceof Error 
+                    ? error.message 
+                    : "Failed to generate question. Please try again.";
+                  setGenerationError(errorMessage);
+                } finally {
+                  setIsGenerating(false);
+                }
+              }}
+              disabled={isGenerating}
+              className="text-red-400 hover:text-red-300 text-sm underline"
+            >
+              Retry
+            </button>
+          </div>
+        )}
 
         <button
           onClick={handleNext}

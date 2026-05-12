@@ -39,6 +39,8 @@ export async function generateQuestion({
     options: data.options,
     answer: data.answer,
     explanation: data.explanation,
+    steps: data.steps || [],
+    formula: data.formula || "",
     shortcut: data.shortcut,
   };
 }

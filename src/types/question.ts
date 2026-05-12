@@ -9,6 +9,8 @@ export interface Question {
   answer: string;
   explanation: string;
   shortcut: string;
+  steps?: string[];
+  formula?: string;
 }
 
 export const questions: Question[] = [

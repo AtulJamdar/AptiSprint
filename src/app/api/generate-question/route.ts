@@ -1,5 +1,52 @@
 import { NextResponse } from "next/server";
 
+function validateQuestion(data: any): string | null {
+  // Check required fields
+  if (!data.question || typeof data.question !== "string") {
+    return "Missing or invalid question";
+  }
+
+  if (!Array.isArray(data.options) || data.options.length !== 4) {
+    return "Options must be an array of exactly 4 items";
+  }
+
+  if (!data.answer || typeof data.answer !== "string") {
+    return "Missing or invalid answer";
+  }
+
+  // Check for duplicate options
+  const normalizedOptions = data.options.map((opt: string) =>
+    opt.replace(/\$/g, "").replace(/,/g, "").trim().toLowerCase()
+  );
+  const uniqueOptions = new Set(normalizedOptions);
+  if (uniqueOptions.size !== 4) {
+    return "Options contain duplicates";
+  }
+
+  // Check if answer is in options
+  const normalizedAnswer = data.answer
+    .replace(/\$/g, "")
+    .replace(/,/g, "")
+    .trim()
+    .toLowerCase();
+  const answerExists = normalizedOptions.some(
+    (opt: string) => opt === normalizedAnswer
+  );
+  if (!answerExists) {
+    return "Answer is not in the options";
+  }
+
+  if (!data.explanation || typeof data.explanation !== "string") {
+    return "Missing or invalid explanation";
+  }
+
+  if (!data.shortcut || typeof data.shortcut !== "string") {
+    return "Missing or invalid shortcut";
+  }
+
+  return null;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -21,7 +68,8 @@ Rules:
 - Difficulty: ${difficulty}
 - 4 options only
 - One correct answer
-- Explanation must be step-by-step
+- ALL options must be different (no duplicates)
+- Explanation must be clear and step-by-step
 - Shortcut must be very short and useful
 - Return ONLY valid JSON
 - No markdown
@@ -33,9 +81,14 @@ JSON format:
   "options": ["", "", "", ""],
   "answer": "",
   "explanation": "",
+  "steps": ["Step 1: ...", "Step 2: ...", "Step 3: ..."],
+  "formula": "",
   "shortcut": ""
 }
+
+IMPORTANT: All 4 options must be unique. Do NOT duplicate any option text.
 `;
+
 
     const response = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
@@ -94,6 +147,15 @@ JSON format:
       } else {
         throw parseError;
       }
+    }
+
+    // Validate question integrity
+    const validationError = validateQuestion(parsed);
+    if (validationError) {
+      return NextResponse.json(
+        { error: validationError },
+        { status: 400 }
+      );
     }
 
     return NextResponse.json(parsed);
